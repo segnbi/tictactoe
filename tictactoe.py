@@ -13,8 +13,8 @@ def initial_state():
     """
     Returns starting state of the board.
     """
-    return [[X, X, O],
-            [EMPTY, EMPTY, O],
+    return [[EMPTY, EMPTY, EMPTY],
+            [EMPTY, EMPTY, EMPTY],
             [EMPTY, EMPTY, EMPTY]]
 
 
@@ -41,6 +41,16 @@ def actions(board):
     """
     Returns set of all possible actions (i, j) available on the board.
     """
+
+    actions = set()
+
+    for i in range(len(board)):
+        for j in range(len(board[i])):
+            if board[i][j] == EMPTY:
+                actions.add((i, j))
+
+    return actions
+
     raise NotImplementedError
 
 
@@ -138,4 +148,11 @@ def minimax(board):
     """
     Returns the optimal action for the current player on the board.
     """
+
+    if terminal(board):
+        return None
+
+    for v in actions(board):
+        print(v)
+
     raise NotImplementedError
