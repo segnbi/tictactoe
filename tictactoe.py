@@ -152,7 +152,16 @@ def minimax(board):
     if terminal(board):
         return None
 
-    for v in actions(board):
-        print(v)
+    if player(board) == X:
+        return maxValue(board)
+        
+    return print('minValue(board)')
 
     raise NotImplementedError
+
+def maxValue(board):
+    if terminal(board):
+        return utility(board)
+
+    v = -100
+    for action in actions(board):
