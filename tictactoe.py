@@ -3,6 +3,8 @@ Tic Tac Toe Player
 """
 
 import math
+import sys
+import copy
 
 X = "X"
 O = "O"
@@ -13,9 +15,9 @@ def initial_state():
     """
     Returns starting state of the board.
     """
-    return [[X, O, X],
-            [X, O, X],
-            [O, X, EMPTY]]
+    return [[EMPTY, EMPTY, EMPTY],
+            [EMPTY, EMPTY, EMPTY],
+            [EMPTY, EMPTY, EMPTY]]
 
 
 def player(board):
@@ -47,7 +49,7 @@ def actions(board):
     for i in range(len(board)):
         for j in range(len(board[i])):
             if board[i][j] == EMPTY:
-                actions.add([i, j])
+                actions.add((i, j))
 
     return actions
 
@@ -59,14 +61,17 @@ def result(board, action):
     Returns the board that results from making move (i, j) on the board.
     """
 
-    # if player(board) == X:
-    #     board[action[0], action[1]] = X
-    #     return board
-        
-    # board[action[0], action[1]] = O
-    # return board
+    board = copy.deepcopy(board)
 
-    print(action)
+    if terminal(board):
+        return board
+
+    if player(board) == X:
+        board[action[0]][action[1]] = X
+        return board
+        
+    board[action[0]][action[1]] = O
+    return board
 
     raise NotImplementedError
 
@@ -210,34 +215,34 @@ def maxMove(board):
         return move
 
     for action in actions(board):
-        move.action = action
-        move = max(move, minMove(result(board, action)))
+        move = max(move, minMove(result(board, action)), action)
 
     return move
 
 
-def max(move, minMove):
+def max(move, minMove, action):
     if minMove.value > move.value:
+        minMove.action = action
         return minMove
 
     return move
 
 
 def minMove(board):
-    move = Move([], -1)
+    move = Move([], 1)
 
     if terminal(board):
         move.value = utility(board)
 
     for action in actions(board):
-        move.action = action
-        move = min(move, maxMove(result(board, action)))
+        move = min(move, maxMove(result(board, action)), action)
 
     return move
 
 
-def min(move, maxMove):
+def min(move, maxMove, action):
     if maxMove.value < move.value:
+        maxMove.action = action
         return maxMove
 
     return move
