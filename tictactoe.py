@@ -34,9 +34,7 @@ def player(board):
     if(xCounter > oCounter):
         return O
 
-    return X    
-
-    raise NotImplementedError
+    return X
 
 
 def actions(board):
@@ -53,8 +51,6 @@ def actions(board):
 
     return actions
 
-    raise NotImplementedError
-
 
 def result(board, action):
     """
@@ -62,6 +58,9 @@ def result(board, action):
     """
 
     board = copy.deepcopy(board)
+
+    if not any(action == validAction for validAction in actions(board)):
+        raise Exception
 
     if terminal(board):
         return board
@@ -72,8 +71,6 @@ def result(board, action):
         
     board[action[0]][action[1]] = O
     return board
-
-    raise NotImplementedError
 
 
 def winner(board):
@@ -112,8 +109,6 @@ def winner(board):
 
     return None
 
-    raise NotImplementedError
-
 
 def terminal(board):
     """
@@ -121,35 +116,17 @@ def terminal(board):
     """
     
     emptyCounter = 0
+
     for row in board:
         emptyCounter += row.count(EMPTY)
+        
     if emptyCounter == 0:
         return True
 
-    if board[0][0] == board[1][1] == board[2][2] == X or board[0][0] == board[1][1] == board[2][2] == O:
+    if winner(board):
         return True
-
-    if board[0][2] == board[1][1] == board[2][0] == X or board[0][2] == board[1][1] == board[2][0] == O:
-        return True
-
-    for row in board:
-        if all(item == X for item in row) or all(item == O for item in row):
-            return True
-
-    for i in range(len(board)):
-        xCounter = 0
-        oCounter = 0
-        for j in range(len(board[i])):
-            if board[j][i] == X:
-                xCounter += 1
-            if board[j][i] == O:
-                oCounter += 1
-        if oCounter == 3 or xCounter == 3:
-            return True
 
     return False
-
-    raise NotImplementedError
 
 
 def utility(board):
@@ -157,38 +134,13 @@ def utility(board):
     Returns 1 if X has won the game, -1 if O has won, 0 otherwise.
     """
 
-    if board[0][0] == board[1][1] == board[2][2] == X:
-        return 1
-    if board[0][2] == board[1][1] == board[2][0] == X:
+    if winner(board) == X:
         return 1
 
-    if board[0][0] == board[1][1] == board[2][2] == O:
+    if winner(board) == O:
         return -1
-    if board[0][2] == board[1][1] == board[2][0] == O:
-        return -1
-    
-    for row in board:
-        if all(item == X for item in row):
-            return 1
-        if all(item == O for item in row):
-            return -1
-
-    for i in range(len(board)):
-        xCounter = 0
-        oCounter = 0
-        for j in range(len(board[i])):
-            if board[j][i] == X:
-                xCounter += 1
-            if board[j][i] == O:
-                oCounter += 1
-        if xCounter == 3:
-            return 1
-        if oCounter == 3:
-            return -1
 
     return 0
-
-    raise NotImplementedError
 
 
 def minimax(board):
@@ -203,8 +155,6 @@ def minimax(board):
         return maxMove(board).action
         
     return minMove(board).action
-
-    raise NotImplementedError
 
 
 def maxMove(board):
